@@ -1,16 +1,20 @@
+// src/components/ItemSelector.tsx
 import React, { useState } from 'react';
+import { Category } from '../types'; // Import the shared Category type
 
-const tools = ['Shaker', 'Muddler', 'Jigger', 'Strainer', 'Spoon'];
-const liquors = ['Vodka', 'Gin', 'Rum', 'Tequila', 'Whiskey', 'Bourbon'];
-const ingredients = ['Lime', 'Sugar', 'Bitters', 'Tonic', 'Soda', 'Mint', 'Lemon'];
+interface ItemSelectorProps {
+  onAddItem: (category: Category, item: string) => void; // Use Category type
+}
 
-const ItemSelector: React.FC<{ onAddItem: (category: string, item: string) => void }> = ({ onAddItem }) => {
-  const [category, setCategory] = useState('tools');
+const ItemSelector: React.FC<ItemSelectorProps> = ({ onAddItem }) => {
+  const [category, setCategory] = useState<Category>("tools"); // Use Category type for state
+  const [item, setItem] = useState("");
 
-  const items = {
-    tools,
-    liquors,
-    ingredients,
+  const handleAdd = () => {
+    if (item.trim()) {
+      onAddItem(category, item); // Pass category as Category type
+      setItem(""); // Clear input after adding
+    }
   };
 
   return (
@@ -18,24 +22,26 @@ const ItemSelector: React.FC<{ onAddItem: (category: string, item: string) => vo
       <h2 className="text-xl text-yellow-400 mb-4">Stock Your Bar</h2>
       <select
         value={category}
-        onChange={(e) => setCategory(e.target.value)}
+        onChange={(e) => setCategory(e.target.value as Category)} // Cast to Category
         className="w-full bg-gray-900 p-2 rounded mb-4 text-white"
       >
         <option value="tools">Tools</option>
         <option value="liquors">Liquors</option>
         <option value="ingredients">Ingredients</option>
       </select>
-      <div className="grid grid-cols-2 gap-2">
-        {items[category as keyof typeof items].map(item => (
-          <button
-            key={item}
-            onClick={() => onAddItem(category, item)}
-            className="bg-gray-700 hover:bg-yellow-500 text-white p-2 rounded"
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+      <input
+        type="text"
+        value={item}
+        onChange={(e) => setItem(e.target.value)}
+        placeholder="Enter item name"
+        className="w-full bg-gray-900 text-white p-2 rounded mb-4"
+      />
+      <button
+        onClick={handleAdd}
+        className="bg-yellow-500 text-white p-2 rounded"
+      >
+        Add Item
+      </button>
     </div>
   );
 };

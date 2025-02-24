@@ -1,16 +1,24 @@
+// src/pages/MyBar.tsx
 import React, { useState } from 'react';
-import MyBarShelf from '../components/MyBarShelf';
+import { Category } from '../types'; // Import the shared Category type
 import ItemSelector from '../components/ItemSelector';
+import MyBarShelf from '../components/MyBarShelf';
 import AIBartender from '../components/AIBartender';
 
+interface Bar {
+  tools: string[];
+  liquors: string[];
+  ingredients: string[];
+}
+
 const MyBar: React.FC = () => {
-  const [bar, setBar] = useState({
-    tools: [] as string[],
-    liquors: [] as string[],
-    ingredients: [] as string[],
+  const [bar, setBar] = useState<Bar>({
+    tools: [],
+    liquors: [],
+    ingredients: [],
   });
 
-  const addItem = (category: keyof typeof bar, item: string) => {
+  const addItem = (category: Category, item: string) => {
     if (!bar[category].includes(item)) {
       setBar(prev => ({
         ...prev,
@@ -19,7 +27,7 @@ const MyBar: React.FC = () => {
     }
   };
 
-  const removeItem = (category: keyof typeof bar, item: string) => {
+  const removeItem = (category: Category, item: string) => {
     setBar(prev => ({
       ...prev,
       [category]: prev[category].filter(i => i !== item),
@@ -28,7 +36,7 @@ const MyBar: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-4xl font-bold text-yellow-400 mb-6">My Bar</h1>
+      <h1 className="text-4xl font-bold text-yellow-400 mb-6">MyBar</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="col-span-1">
           <ItemSelector onAddItem={addItem} />
